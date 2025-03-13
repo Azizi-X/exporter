@@ -738,8 +738,8 @@ div:has(> .acronym) {
     font-size: .5rem !important;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 3px;
-    margin-bottom: .2rem;
+    /* margin-right: 3px; */
+    /* margin-bottom: .2rem; */
     background-color: var(--background-secondary);
     color: var(--text-normal);
     text-align: center;
