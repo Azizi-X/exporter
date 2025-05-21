@@ -185,10 +185,17 @@ function clickEvents(event) {
                 message.classList.remove("force-show")
             }
         } else {
+            const scroll = document.querySelector('.scroll');
+            const closeToBottom = (scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight) <= 6
+
             blockedMessageParent.classList.add("expanded")
             event.target.textContent = "Hide"
             for (const message of messages) {
                 message.classList.add("force-show")
+            }
+
+            if (closeToBottom) {
+                scroll.scrollTop = scroll.scrollHeight
             }
         }
     }
@@ -1107,7 +1114,10 @@ const observer = new MutationObserver(async (mutationsList) => {
         if (mutation.type === "childList") {
             for (const node of mutation.addedNodes) {
                 if (node instanceof HTMLElement) {
-                    if (
+                    if (node.id == "display-theme-selector") {
+                        node.value = localStorage.getItem('theme') || 'new-ash'
+                        setTheme(node.value)
+                    } else if (
                         node.classList.contains("lazyGif") ||
                         node.classList.contains("emoji") ||
                         node.classList.contains("lazySticker") ||
@@ -1532,8 +1542,10 @@ function handleSearch(search) {
 }
 
 function searchFocus(event) {
-    const headerSearch = event.closest(".header-search");
-    headerSearch.style.width = "240px"
+    if (!document.body.classList.contains("visual-refresh")) {
+        const headerSearch = event.closest(".header-search");
+        headerSearch.style.width = "240px"
+    }
 }
 
 function searchBlur(event) {
@@ -1619,4 +1631,21 @@ function isFullScreen() {
               document.mozFullScreenElement || 
               document.webkitFullscreenElement || 
               document.msFullscreenElement);
+}
+
+const visualRefresh = ["new-ash", "new-dark"];
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('theme', theme);
+
+    if ( visualRefresh.includes(theme)) {
+        document.body.classList.add("visual-refresh");
+    } else {
+        document.body.classList.remove("visual-refresh");
+    }
+}
+
+function themeChange(element) {
+    localStorage.setItem('theme', element.value)
+    setTheme(element.value)
 }
